@@ -6,23 +6,21 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import ListIcon from '@material-ui/icons/List';
 import { Link } from "react-router-dom";
+import Badge from '@material-ui/core/Badge';
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1,
   },
   grow: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-};
+});
 
 function Bar(props) {
-  const { classes } = props;
+  const { classes, type, count } = props;
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -30,11 +28,22 @@ function Bar(props) {
           <Typography variant="title" color="inherit" className={classes.grow}>
             {props.title}
           </Typography>
+          {type === 'add' ?
+          <Link to="/">
+          <Badge 
+                badgeContent={count} 
+                color="primary">
+            <Button variant="fab" mini color="secondary" aria-label="List">
+              
+                <ListIcon />
+              
+            </Button></Badge>
+          </Link> : 
           <Link to="/add">
-            <Button color="inherit" aria-label="Add">
+            <Button variant="fab" mini color="secondary" aria-label="Add">
                 <AddIcon />
             </Button>
-          </Link>
+          </Link>}
         </Toolbar>
       </AppBar>
     </div>

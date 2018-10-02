@@ -38,17 +38,20 @@ const styles = theme => ({
 });
 
 class ListStudents extends React.Component {
+  
   deleteStudent = ( id ) => {
     this.props.removeStudent(id);
   }
+
   componentDidMount() {
     this.props.getStudents();
   }
+
   render() {
     const { classes, students } = this.props;
     return (
       <div className={classes.root}>
-      <Bar title={'Students list'}></Bar>
+      <Bar title={'Students list'} type={'list'} count={students.length}/>
           {students && students.length ? 
       <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -95,7 +98,6 @@ ListStudents.propTypes = {
 };
 
 const mapStateToProps = (store) => ({
-  store,
   students: store.students.students,
 });
 

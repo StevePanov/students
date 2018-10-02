@@ -5,8 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Bar from './Bar';
-import { Link } from "react-router-dom";
 import addStudents from '../api/add';
+import fetchStudents from '../api/fetch';
 
 const styles = theme => ({
   root: {
@@ -30,17 +30,33 @@ const styles = theme => ({
 });
 
 class Add extends React.Component {
-  state = {
-    name: '',
-    surname: '',
-    rating: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      surname: '',
+      rating: '',
+    };
+  }
+
+  componentDidMount() {
+    this.props.getStudents();
+  }
 
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     });
   };
+
+  clear = () => {
+    this.setState({
+      name: '',
+      surname: '',
+      rating: '',
+    });
+  }
+
   saveStudent = () => {
     const {name, surname, rating} = this.state;
     if (name && surname && rating) {
@@ -59,46 +75,67 @@ class Add extends React.Component {
     
   };
   render() {
-    const { classes } = this.props;
-
+    const { classes, count } = this.props;
     return (
       <div className={classes.root}>
-      <Bar title={'Add student'}></Bar>
-      <form className={classes.container} noValidate autoComplete="off">
-        <TextField
-          id="outlined-name"
-          label="Name"
-          className={classes.textField}
-          value={this.state.name}
-          onChange={this.handleChange('name')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-name"
-          label="Surname"
-          className={classes.textField}
-          value={this.state.surname}
-          onChange={this.handleChange('surname')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-number"
-          label="Rating"
-          value={this.state.rating}
-          onChange={this.handleChange('rating')}
-          type="number"
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-        />
-        <Link to="/">
-          <Button variant="contained" color="primary" className={classes.button} onClick={this.saveStudent}>
-          Add student
+        <Bar title={'Add student'} type={'add'} count={count}/>
+        <form className={classes.container}>
+          <TextField
+            autoFocus
+            id="outlined-name"
+            label="Name"
+            className={classes.textField}
+            value={this.state.name}
+            onChange={this.handleChange('name')}
+            margin="normal"
+            variant="outlined"
+            required
+            fullWidth={true}
+          />
+          <TextField
+            id="outlined-name"
+            label="Surname"
+            className={classes.textField}
+            value={this.state.surname}
+            onChange={this.handleChange('surname')}
+            margin="normal"
+            variant="outlined"
+            required
+            fullWidth={true}
+          />
+          <TextField
+            id="outlined-number"
+            label="Rating"
+            value={this.state.rating}
+            onChange={this.handleChange('rating')}
+            type="number"
+            className={classes.textField}
+            margin="normal"
+            variant="outlined"
+            inputProps={{
+              min: "0",
+              max: "100"
+            }}
+            fullWidth={true}
+            required
+          />
+          <Button
+            variant="outlined"
+            className={classes.button} 
+            onClick={this.clear}
+          >
+            Clear
           </Button>
-        </Link>
-      </form>
+          <Button 
+            disabled={this.state.name && this.state.surname && this.state.rating ? false : true}
+            variant="contained"
+            color="secondary"
+            className={classes.button} 
+            onClick={this.saveStudent}
+          >
+            Add student
+          </Button>
+        </form>
       </div>
     );
   }
@@ -109,9 +146,11 @@ Add.propTypes = {
 };
 
 const mapStateToProps = (store) => ({
+  count: store.students.students.length,
 });
 
 const mapDispatchToProps = dispatch => ({
+  getStudents: () => {dispatch(fetchStudents())},
   add: (data) => {dispatch(addStudents(data))}
 });
 
