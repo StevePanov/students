@@ -17,6 +17,7 @@ import Paper from "@material-ui/core/Paper";
 import Tooltip from '@material-ui/core/Tooltip';
 import fetchStudents from "../api/read";
 import removeStudent from "../api/delete";
+
 import Info from "./Info";
 
 const styles = theme => ({
