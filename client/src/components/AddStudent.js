@@ -1,41 +1,41 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Bar from './Bar';
-import addStudents from '../api/add';
-import fetchStudents from '../api/fetch';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Bar from "./Bar";
+import addStudents from "../api/create";
+import fetchStudents from "../api/read";
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    maxWidth: 752,
+    maxWidth: 752
   },
   container: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: "flex",
+    flexWrap: "wrap"
   },
   textField: {
     marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   menu: {
-    width: 200,
+    width: 200
   },
   button: {
-    margin: theme.spacing.unit,
-  },
+    margin: theme.spacing.unit
+  }
 });
 
-class Add extends React.Component {
+class AddStudent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      surname: '',
-      rating: '',
+      name: "",
+      surname: "",
+      rating: ""
     };
   }
 
@@ -45,40 +45,39 @@ class Add extends React.Component {
 
   handleChange = name => event => {
     this.setState({
-      [name]: event.target.value,
+      [name]: event.target.value
     });
   };
 
   clear = () => {
     this.setState({
-      name: '',
-      surname: '',
-      rating: '',
+      name: "",
+      surname: "",
+      rating: ""
     });
-  }
+  };
 
   saveStudent = () => {
-    const {name, surname, rating} = this.state;
+    const { name, surname, rating } = this.state;
     if (name && surname && rating) {
       let student = {
         name,
         surname,
-        rating,
-      }
+        rating
+      };
       this.props.add(student);
       this.setState({
-        name: '',
-        surname: '',
-        rating: '',
+        name: "",
+        surname: "",
+        rating: ""
       });
     }
-    
   };
   render() {
     const { classes, count } = this.props;
     return (
       <div className={classes.root}>
-        <Bar title={'Add student'} type={'add'} count={count}/>
+        <Bar title={"Add student"} count={count} />
         <form className={classes.container}>
           <TextField
             autoFocus
@@ -86,7 +85,7 @@ class Add extends React.Component {
             label="Name"
             className={classes.textField}
             value={this.state.name}
-            onChange={this.handleChange('name')}
+            onChange={this.handleChange("name")}
             margin="normal"
             variant="outlined"
             required
@@ -97,7 +96,7 @@ class Add extends React.Component {
             label="Surname"
             className={classes.textField}
             value={this.state.surname}
-            onChange={this.handleChange('surname')}
+            onChange={this.handleChange("surname")}
             margin="normal"
             variant="outlined"
             required
@@ -107,7 +106,7 @@ class Add extends React.Component {
             id="outlined-number"
             label="Rating"
             value={this.state.rating}
-            onChange={this.handleChange('rating')}
+            onChange={this.handleChange("rating")}
             type="number"
             className={classes.textField}
             margin="normal"
@@ -120,17 +119,22 @@ class Add extends React.Component {
             required
           />
           <Button
+            disabled={
+              !(this.state.name || this.state.surname || this.state.rating)
+            }
             variant="outlined"
-            className={classes.button} 
+            className={classes.button}
             onClick={this.clear}
           >
             Clear
           </Button>
-          <Button 
-            disabled={this.state.name && this.state.surname && this.state.rating ? false : true}
+          <Button
+            disabled={
+              !(this.state.name && this.state.surname && this.state.rating)
+            }
             variant="contained"
             color="secondary"
-            className={classes.button} 
+            className={classes.button}
             onClick={this.saveStudent}
           >
             Add student
@@ -141,20 +145,24 @@ class Add extends React.Component {
   }
 }
 
-Add.propTypes = {
-  classes: PropTypes.object.isRequired,
+AddStudent.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (store) => ({
-  count: store.students.students.length,
+const mapStateToProps = store => ({
+  count: store.students.students.length
 });
 
 const mapDispatchToProps = dispatch => ({
-  getStudents: () => {dispatch(fetchStudents())},
-  add: (data) => {dispatch(addStudents(data))}
+  getStudents: () => {
+    dispatch(fetchStudents());
+  },
+  add: data => {
+    dispatch(addStudents(data));
+  }
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(styles)(Add));
+  mapDispatchToProps
+)(withStyles(styles)(AddStudent));
