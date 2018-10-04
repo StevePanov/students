@@ -7,25 +7,21 @@ import Button from "@material-ui/core/Button";
 import Bar from "./Bar";
 import addStudents from "../api/create";
 import fetchStudents from "../api/read";
+import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    maxWidth: 752
-  },
-  container: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit
   },
-  menu: {
-    width: 200
-  },
   button: {
     margin: theme.spacing.unit
+  },
+  center: {
+    margin: "0 auto"
+  },
+  form: {
+    width: "95%"
   }
 });
 
@@ -76,9 +72,9 @@ class AddStudent extends React.Component {
   render() {
     const { classes, count } = this.props;
     return (
-      <div className={classes.root}>
+      <Grid item xs={12} sm={12} md={10} lg={6} className={classes.center}>
         <Bar title={"Add student"} count={count} />
-        <form className={classes.container}>
+        <form className={classes.form}>
           <TextField
             autoFocus
             id="outlined-name"
@@ -117,6 +113,8 @@ class AddStudent extends React.Component {
             }}
             fullWidth={true}
             required
+            error={!(this.state.rating >= 0 && this.state.rating <= 100)}
+            helperText="Allowed rating interval is: 0 – 100"
           />
           <Button
             disabled={
@@ -130,17 +128,18 @@ class AddStudent extends React.Component {
           </Button>
           <Button
             disabled={
+              !(this.state.rating >= 0 && this.state.rating <= 100) ||
               !(this.state.name && this.state.surname && this.state.rating)
             }
             variant="contained"
-            color="secondary"
+            color="primary"
             className={classes.button}
             onClick={this.saveStudent}
           >
             Add student
           </Button>
         </form>
-      </div>
+      </Grid>
     );
   }
 }

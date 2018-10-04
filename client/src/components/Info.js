@@ -1,20 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
-import blue from "@material-ui/core/colors/blue";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 import updStudent from "../api/update";
-
-const styles = {
-  avatar: {
-    backgroundColor: blue[100],
-    color: blue[600]
-  }
-};
 
 class Info extends React.Component {
   constructor(props) {
@@ -54,7 +46,7 @@ class Info extends React.Component {
     }
   }
   render() {
-    const { classes, onClose, ...other } = this.props;
+    const { onClose, ...other } = this.props;
     return (
       <Dialog
         onClose={this.handleClose}
@@ -62,59 +54,69 @@ class Info extends React.Component {
         {...other}
       >
         <DialogTitle id="simple-dialog-title">Change info</DialogTitle>
-
-        <TextField
-          id="outlined-name"
-          label="Name"
-          className={classes.textField}
-          value={this.state.name}
-          onChange={this.handleChange("name")}
-          margin="normal"
-          variant="outlined"
-          required
-          fullWidth={true}
-        />
-        <TextField
-          id="outlined-name"
-          label="Surname"
-          className={classes.textField}
-          value={this.state.surname}
-          onChange={this.handleChange("surname")}
-          margin="normal"
-          variant="outlined"
-          required
-          fullWidth={true}
-        />
-        <TextField
-          id="outlined-number"
-          label="Rating"
-          value={this.state.rating}
-          onChange={this.handleChange("rating")}
-          type="number"
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-          inputProps={{
-            min: "0",
-            max: "100"
-          }}
-          fullWidth={true}
-          required
-        />
-        <Button size="small" color="secondary" onClick={this.handleClose}>
-          Cancel
-        </Button>
-        <Button size="small" color="primary" onClick={this.updateStudent}>
-          Change
-        </Button>
+        <DialogContent>
+          <TextField
+            id="outlined-name"
+            label="Name"
+            value={this.state.name}
+            onChange={this.handleChange("name")}
+            margin="normal"
+            variant="outlined"
+            required
+            fullWidth={true}
+          />
+          <TextField
+            id="outlined-name"
+            label="Surname"
+            value={this.state.surname}
+            onChange={this.handleChange("surname")}
+            margin="normal"
+            variant="outlined"
+            required
+            fullWidth={true}
+          />
+          <TextField
+            id="outlined-number"
+            label="Rating"
+            value={this.state.rating}
+            onChange={this.handleChange("rating")}
+            type="number"
+            margin="normal"
+            variant="outlined"
+            inputProps={{
+              min: "0",
+              max: "100"
+            }}
+            fullWidth={true}
+            error={!(this.state.rating >= 0 && this.state.rating <= 100)}
+            helperText="Allowed rating interval is: 0 – 100"
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.handleClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.updateStudent}
+            disabled={
+              !(this.state.rating >= 0 && this.state.rating <= 100) ||
+              !(this.state.name && this.state.surname && this.state.rating)
+            }
+          >
+            Change
+          </Button>
+        </DialogActions>
       </Dialog>
     );
   }
 }
-
-Info.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 const mapStateToProps = store => ({});
 const mapDispatchToProps = dispatch => ({
@@ -126,4 +128,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Info));
+)(Info);
