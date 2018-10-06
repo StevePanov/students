@@ -22,6 +22,20 @@ module.exports = function(app, db) {
       });
   });
 
+  app.get("/students/:query", (req, res) => {
+    const query = req.params.query;
+    db.collection("students")
+      .find({
+        $or: [
+          { name: new RegExp(query, "i") },
+          { surname: new RegExp(query, "i") }
+        ]
+      })
+      .toArray((err, result) => {
+        if (err) res.send(err);
+        res.send(result);
+      });
+  });
   // app.get('/students/:id', (req, res) => {
   //   const id = req.params.id;
   //   const query = { '_id': new ObjectID(id) };
